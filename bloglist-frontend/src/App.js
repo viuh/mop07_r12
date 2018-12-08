@@ -1,4 +1,11 @@
 import React from 'react'
+
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
+import {
+    Table, FormGroup, FormControl, ControlLabel, Button, Alert,
+    Navbar, NavbarBrand, NavItem, Nav, MenuItem, NavDropdown
+} from 'react-bootstrap'
+
 import Blog from './components/Blog'
 import User from './components/User'
 
@@ -13,6 +20,67 @@ import TogglableDiv from './components/TogglableDiv'
 
 import LoginForm from './components/LoginForm'
 const jwt = require('jsonwebtoken')
+
+//            <h2>{useri.name}</h2>
+// <div>{useri.id}</div>
+
+
+const Userz = ({ useri }) => {
+    if (useri != null) {
+        console.log('Printtaa yhden tietoi', useri.id)
+        return (
+            <div>
+                <h3>{useri.name}</h3>
+                <ul>
+                    <li>{useri.id}</li>
+                    <li>{useri.username}</li>
+                </ul>
+                <b>Blogs created</b>
+                <li>{useri.blogs[0].title}</li>
+            </div>
+        )
+    } else {
+        return null;
+    }
+}
+
+const UsersZ = ({ users }) => (
+    <div>
+        <h2>UsersB</h2>
+        <Table striped>
+            <tbody>
+                {users.map(user =>
+                    <tr key={user.id}>
+                        <td>
+                            *<Link to={`/users/${user.id}`}>{user.name}</Link>*
+                        </td>
+                        <td>{user.blogs.length}</td>
+                    </tr>
+                )}
+            </tbody>
+        </Table>
+    </div>
+);
+
+
+// const aarg = () => {
+//     <Table striped>
+//         <tbody>
+//             {users.map(user =>
+//                 <tr key={user.id}>
+//                     <td>
+//                         <Link to={`/users/${user.id}`}>{user.content}</Link>
+//                     </td>
+//                     <td>
+//                         {user.blogs}
+//                     </td>
+//                 </tr>
+//             )}
+//         </tbody>
+//     </Table>
+//     </div >
+//     )
+//     }
 
 
 const getTokenOwner = (tokeni) => {
@@ -66,50 +134,6 @@ const deletableBlog = (ablog, me) => {
 }
 
 
-
-const Blogy = ({ blog, fu1 }) => {
-    return
-    (
-        <div className="blogbody">
-            <a target="_new" href="`blog.url`">{blog.url}</a>
-            <form onSubmit={fu1}>
-                {blog.likes} likes <button>like</button><br />
-            </form>
-            added by !!!{blog.user} .!!!
-  </div>
-    )
-}
-
-const showBlogsitXXX = ({ allblogs, blog, fu1, visibleOne }) => {
-
-    return (
-        <div>
-            <h2>Blogs</h2>
-            {allblogs.map(blog =>
-                <div key={blog._id} id={blog._id} >
-                    <Blog key={blog._id} id={blog._id} blog={blog} />
-                </div>
-            )
-            }
-        </div>
-    )
-}
-
-// const User = (username, name, blogsqty) => (
-//     <div>
-//         <div>&nbsp;&nbsp;&nbsp;&nbsp;"Blogs added"</div>
-//         <div key={username}>
-//             <div><a href="#">{name}</a> 0 </div>
-//         </div>
-//     </div>
-// )
-
-
-
-
-
-
-
 class App extends React.Component {
     constructor(props) {
         super(props)
@@ -117,7 +141,7 @@ class App extends React.Component {
             username: '',
             password: '',
             blogs: [],
-            error: '',  // also info msgs use this 
+            error: '',  // also info msgs use this
             user: null,
             currentuser: null,
             currentuserid: null,
@@ -323,7 +347,7 @@ class App extends React.Component {
         //      this.setState({ blogs })
         //    )
         let kama = await blogService.getAll()
-        //this.setState({ blogs: kama })
+        //this.setState({blogs: kama })
 
         // const allBlogs = await blogService.getAll()
         //this.setState({allBlogs})
@@ -350,6 +374,11 @@ class App extends React.Component {
 
     render() {
 
+
+        const userById = (id) => {
+            console.log('thiu', this.state.users)
+            return this.state.users.find(user => user.id === id)
+        }
 
         const showBlogs = (blogsit) => (
             <div>
@@ -442,11 +471,28 @@ class App extends React.Component {
 
         console.log("Kaek, tyypit", this.state.users)
         //showUsers(this.state.users)
-
+        //
         //                #allusers = "
         return (
             <div>
+                <div>
+                    <Router>
+                        <div>
+                            <div>
+                                <Link to="/">home</Link>&nbsp;
+                                <Link to="/users">users</Link>&nbsp;
+                            </div>
+                        </div>
+                    </Router>
+                </div>
+
                 <Notification message={this.state.error} msgtype={this.state.msgtype} />
+
+                <Route path="/users" render={() => <UsersZ users={this.state.users} />} />
+
+                <Route exact path="/users/:id" render={({ match }) =>
+                    <Userz useri={userById(match.params.id)} />}
+                />
 
                 <h2>Welcome to blog app</h2>
                 {this.state.user === null ?
@@ -455,8 +501,6 @@ class App extends React.Component {
                         <p>{this.state.user.name} logged in &nbsp;</p>
                         <form onSubmit={this.logout}><button>logout</button></form>
                         {addBlogForm()}
-
-                        {showUsersForm(this.state.users)}
 
                         {showBlogs(sortBlogs(this.state.blogs))}
 
