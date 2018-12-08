@@ -1,0 +1,13 @@
+PUT http://localhost:3003/api/blogs/5ae8d21d7bc2ef7af03d87d7
+content-type: application/json
+authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1sdXVra2FpIiwiaWQiOiI1YWU1OWY0YTBlZDQ3MjM4ZGQ2OWIxMDEiLCJpYXQiOjE1MjQ5OTg1MTB9.2RAdKOFXV4itTKN9l_Rp0I_a8Dy0cTuSrr9YHY0XZhE
+
+{
+  "title": "blogi 6",
+  "author": "Foodie food 6",
+  "url" : "urli6",
+  "likes": 7,
+  "user": {
+        "$oid": "5ae8c5b955e3612604c2486e"
+    } 
+}

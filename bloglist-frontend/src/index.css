@@ -1,0 +1,46 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+.error {
+  color: red;
+  background: lightgrey;
+  font-size: 20px;
+  border-style: solid;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.info {
+  color: green;
+  padding: 10px;
+  font-size: 15px;
+  border-style:dashed;
+  border-radius: 3px;
+
+}
+
+.blogheader {
+  border-style: solid;
+  border-radius: 1;
+  margin: 2px;
+}
+
+.blogbody {
+  paddingTop: 10;
+  paddingLeft: 2;
+  border: 'solid';
+  borderWidth: 1;
+  marginBottom: 5
+}
+
+.hidden {
+  display:none
+}
+
+.visible {
+  display: block
+}

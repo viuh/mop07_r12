@@ -1,0 +1,22 @@
+{
+  "blogs": [
+    {
+      "title" : "Blog of Arto",
+      "author": "Arto Hellas",
+      "uri": "uri1",
+      "likes": 111
+    },
+    {
+      "title" : "Blog of Meiju",
+      "author": "Meiju Malllas",
+      "uri": "uri121",
+      "likes": 121
+    },
+    {
+      "title" : "Blog of Zunes",
+      "author": "Zunes Zing",
+      "uri": "uri131",
+      "likes": 131
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+
+DBUSER = "kettu"
+DBPASS = "omnirauha"
+DBNAME = "@ds147469.mlab.com:47469/blogi_dev"
+PORT = 3001
+
+
+SECRET = "aksdjuioouimzxcvsdfd"
+
+XTEST_PORT=3002
+XTESTDBNAME = @ds249839.mlab.com:49839/blog_prod
+XTESTUSER = "hirvi"
+XTESTPASS = "nukkurauha"
+
+TEST_PORT=3003
+TESTDBNAME = @ds147469.mlab.com:47469/blogi_dev
+TESTUSER = "kettu"
+TESTPASS = "omnirauha"
