@@ -35,6 +35,8 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "jsonwebtoken": "^8.2.1",
+    "react": "^16.6.3",
+    "react-dom": "^16.6.3",
     "tls": "0.0.1"
   }
 }
