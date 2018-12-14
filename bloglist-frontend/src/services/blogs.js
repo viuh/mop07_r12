@@ -4,7 +4,7 @@ const baseUrl = '/api/blogs'
 let token = null
 
 
-const getAll = () => {
+const getAll = async () => {
   console.log("GetService")
   const request = axios.get(baseUrl)
   return request.then(response => response.data)
@@ -13,10 +13,10 @@ const getAll = () => {
 
 const getOne = async (id) => {
 
-  console.log('Get one: ',id)
+  console.log('Get one: ', id)
 
   const allBlogs = await getAll()
-  let chosen = allBlogs.filter({"_id":id})
+  let chosen = allBlogs.filter({ "_id": id })
   console.log('Found one:', chosen)
   return chosen
 
@@ -31,7 +31,7 @@ const create = async (newObject) => {
   console.log("CreateService", newObject)
 
   const config = {
-    headers: {'Authorization': token}
+    headers: { 'Authorization': token }
   }
 
   const response = await axios.post(baseUrl, newObject, config)
@@ -39,17 +39,17 @@ const create = async (newObject) => {
 }
 
 const update = async (id, newObject) => {
-  console.log("UpdateService",id)
+  console.log("UpdateService", id)
   const response = await axios.put(`${baseUrl}/${id}`, newObject)
   return response.data
 }
 
 const deletex = async (id) => {
-    console.log("DelService",id)
-    const response =  await axios.delete(`${baseUrl}/${id}`)
-    return response.data
+  console.log("DelService", id)
+  const response = await axios.delete(`${baseUrl}/${id}`)
+  return response.data
 }
-  
 
-export default { getAll, create, update,deletex, setToken,getOne }
+
+export default { getAll, create, update, deletex, setToken, getOne }
 

@@ -1,13 +1,10 @@
 import React from 'react'
 
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
-import {
-    Table, FormGroup, FormControl, ControlLabel, Button, Alert,
-    Navbar, NavbarBrand, NavItem, Nav, MenuItem, NavDropdown
-} from 'react-bootstrap'
+import { Table, th } from 'react-bootstrap'
 
 import Blog from './components/Blog'
-import User from './components/User'
+//import User from './components/User'
 
 import blogService from './services/blogs'
 import userService from './services/users'
@@ -16,13 +13,37 @@ import Notification from './components/Notification'
 import loginService from './services/login'
 import './index.css'
 import Togglable from './components/Togglable'
-import TogglableDiv from './components/TogglableDiv'
+//import TogglableDiv from './components/TogglableDiv'
 
 import LoginForm from './components/LoginForm'
 const jwt = require('jsonwebtoken')
 
 //            <h2>{useri.name}</h2>
 // <div>{useri.id}</div>
+
+
+const BlogsY = ({ blogsit }) => {
+
+    if (blogsit != null) {
+        return (
+            <Table striped>
+                <th>Blog name</th><th>Likes</th>
+                <tbody>
+                    {blogsit.map(blog =>
+                        <tr key={blog.id}>
+                            <td>
+                                <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+                            </td>
+                            <td>{blog.likes}</td>
+                        </tr>
+                    )}
+                </tbody>
+            </Table>
+        )
+    } else {
+        return null;
+    }
+}
 
 
 const Userz = ({ useri }) => {
@@ -43,6 +64,52 @@ const Userz = ({ useri }) => {
         return null;
     }
 }
+
+
+const Blogz = ({ blogi }) => {
+    if (blogi != null) {
+        console.log('Printtaa yhden blogin tietoi', blogi.id)
+        return (
+            <div>
+                <h3>{blogi.name}</h3>
+                <a href="{blogi.url}" target="_new">{blogi.url}</a>&nbsp;
+                {blogi.likes} likes&nbsp;&nbsp;<button name="like">like</button><br />
+                added by&nbsp;{blogi.author}
+            </div>
+        )
+    } else {
+        return null;
+    }
+}
+
+
+//{showBlogs(sortBlogs(this.state.blogs))}
+//fu1={() => handleClick(blog)}
+//fu2={() => handleLikeClick(blog)}
+//                        showdelete={deletableBlog(blog, machstate.token)}
+//fu3={() => this.handleDeleteClick(blog)}
+
+const BlogsZ = ({ blogsit, machstate }) => {
+    return (
+        <div>
+            <h2>BlogsZZZ</h2>
+            {blogsit.map(blog =>
+                <div key={blog._id}>
+                    <Blog key={blog._id} id={blog._id} blog={blog}
+                        adder='tbs'
+                        newlikes={machstate.likecounter}
+                        likedOne={machstate.likedOne}
+                        visible={machstate.blogvisibleid}
+                        lastopened={machstate.lastopened}
+                        counter={machstate.clicksdone}
+                        currentuser={machstate.currentuserid}
+                    />
+                </div>
+            )}
+        </div>
+    );
+}
+
 
 const UsersZ = ({ users }) => (
     <div>
@@ -380,6 +447,12 @@ class App extends React.Component {
             return this.state.users.find(user => user.id === id)
         }
 
+        const blogById = (id) => {
+            console.log('thiu2', this.state.blogs)
+            return this.state.blogs.find(blogi => blogi.id === id)
+        }
+
+
         const showBlogs = (blogsit) => (
             <div>
                 <h2>Blogs</h2>
@@ -403,6 +476,28 @@ class App extends React.Component {
             </div>
         )
 
+        const showBlogs101 = (blogsit, delfun, usertoken) => (
+            <div>
+                <h2>Blogs</h2>
+                {blogsit.map(blog =>
+                    <div key={blog._id}>
+                        <Blog key={blog._id} id={blog._id} blog={blog}
+                            adder='tbs'
+                            newlikes={this.state.likecounter}
+                            likedOne={this.state.likedOne}
+                            fu1={() => this.handleClick(blog)}
+                            fu2={() => this.handleLikeClick(blog)}
+                            visible={this.state.blogvisibleid}
+                            lastopened={this.state.lastopened}
+                            counter={this.state.clicksdone}
+                            showdelete={delfun(blog, usertoken)}
+                            fu3={() => this.handleDeleteClick(blog)}
+                            currentuser={this.state.currentuserid}
+                        />
+                    </div>
+                )}
+            </div>
+        )
 
         const showUsers = (allusers) => {
             <div>
@@ -475,26 +570,22 @@ class App extends React.Component {
         //                #allusers = "
         return (
             <div>
+                <h2>Welcome to blog app</h2>
+                <Notification message={this.state.error} msgtype={this.state.msgtype} />
+
                 <div>
                     <Router>
                         <div>
                             <div>
                                 <Link to="/">home</Link>&nbsp;
                                 <Link to="/users">users</Link>&nbsp;
+                                <Link to="/blogs">blogs</Link>&nbsp;
                             </div>
                         </div>
                     </Router>
                 </div>
 
-                <Notification message={this.state.error} msgtype={this.state.msgtype} />
 
-                <Route path="/users" render={() => <UsersZ users={this.state.users} />} />
-
-                <Route exact path="/users/:id" render={({ match }) =>
-                    <Userz useri={userById(match.params.id)} />}
-                />
-
-                <h2>Welcome to blog app</h2>
                 {this.state.user === null ?
                     loginForm() :
                     <div>
@@ -502,14 +593,40 @@ class App extends React.Component {
                         <form onSubmit={this.logout}><button>logout</button></form>
                         {addBlogForm()}
 
-                        {showBlogs(sortBlogs(this.state.blogs))}
 
                     </div>
                 }
+
+
+                <Route path="/users" render={() => <UsersZ users={this.state.users} />} />
+
+                <Route exact path="/users/:id" render={({ match }) =>
+                    <Userz useri={userById(match.params.id)} />} //ok
+                />
+
+                <Route path="/blogs" render={() => <BlogsY blogsit={this.state.blogs} />} />
+
+                <Route exact path="/blogs/:id" render={({ match }) =>
+                    <Blogz blogi={blogById(match.params.id)} />} //ok
+                />
+
+
+                <Route path="/newblogsXX" render={() => {
+                    showBlogs101(sortBlogs(this.state.blogs)
+                        , deletableBlog
+                        , this.state.user.token)
+                }
+                } />
+
+                <Route path="/newblogs" render={() => { showBlogs(sortBlogs(this.state.blogs)) }} />
+
 
             </div>
         );
     }
 }
 
+//                        {showBlogs(sortBlogs(this.state.blogs))}
+//</div>
+//{() => <BlogsZ blogsit={this.state.users} machstate={this.state} />}
 export default App;
